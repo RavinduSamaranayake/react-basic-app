@@ -10,9 +10,36 @@ function App() {
   const element3 = <div>
     <div>Are you sure want to do this ?</div>
   </div>
-  
+
   const element4 = React.createElement('div',null,React
   .createElement('div',null,'Are you sure want to do this2s ?'))
+
+  const SampleComp = (props) => {
+    let color = ''
+    switch(props.type){
+      case 'SUBMIT':
+        color = 'blue'
+        break
+      case 'CANCEL':
+        color = 'red'
+        break
+      case 'CONFIRM':
+        color = 'green'
+        break
+      default:
+        color = 'white'
+    }
+    return (
+      <button style = {{background: color}}>{props.text}</button>
+     ) 
+   }
+
+   const SampleComp2 = () => {
+    return (<div>
+      <p>{element3}</p>
+      <p>{element4}</p>
+    </div>) 
+   }
 
   return (
     <div className="App">
@@ -22,19 +49,19 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
 
-        </a>
-        <p>{element1}</p>
-        <p>{element2}</p>
-        <p>{element3}</p>
-        <p>{element4}</p> 
+          {/* elements */}
+          <p>{element1}</p>
+          <p>{element2}</p>
+
+        {/* components */}
+        <SampleComp type='SUBMIT' text='Submit'/>
+        <SampleComp type='CANCEL' text='Cancel'/>
+        <SampleComp type='CONFIRM' text='Confirm'/>
+
+        <SampleComp2/>   
+
+  
       </header>
     </div>
   );
