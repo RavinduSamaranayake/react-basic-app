@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
+import Clock from './components/Clock'
 import UserProfile,{UserRole} from './components/UserProfile';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h1>Welcome to the Site</h1> 
+        <Clock/>
         <UserProfile
          title = {title}
          name = 'Kushan'
