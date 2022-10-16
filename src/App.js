@@ -1,67 +1,50 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function App() {
+  //Currently we are using hooks in functional components insted of handling these attributes in react class components 
+  const [user , setUser] = React.useState({ //Insted of React class component states
+    firstName : 'Kushan',
+    lastName : 'Ravindu'
+  });
 
-  const element1 = <h3>Hello Kushan</h3> //element create using JSX (JavaScript XML)-> EASSY WAY
-  const element2 = React.createElement('h3',null,'Hello Ravindu') // above JSX converts to this type
+  //don't use promises within useEffects!!!!!!!!!!! 
+  useEffect(() => { // don't use this. this is effect to the perfromance of the app (wildcard thing) 
+    console.log('print always when component is reload or initiate same as ComponentDidMount and ComponentDidUpdate. ',user);
+  });
+  useEffect(() => { //Insted of React class component methods like ComponentDidMount,ComponentdDidUpdate,ComponentWillMount......
+    console.log('print when component is reload or initiate same as ComponentDidMount. ',user);
+  },[]);
 
-  const element3 = <div>
-    <div>Are you sure want to do this ?</div>
-  </div>
+  useEffect(() => { 
+    console.log('print when only lastname is changed same as ComponentDidMount and ComponentDidUpdate. ',user);
+  },[user.lastName]);
 
-  const element4 = React.createElement('div',null,React
-  .createElement('div',null,'Are you sure want to do this2s ?'))
+  useEffect(() => {
+    console.log('print when lastName or  firstName changed same as ComponentDidMount and ComponentDidUpdate. ',user);
 
-  const SampleComp = (props) => {
-    let color = ''
-    switch(props.type){
-      case 'SUBMIT':
-        color = 'blue'
-        break
-      case 'CANCEL':
-        color = 'red'
-        break
-      case 'CONFIRM':
-        color = 'green'
-        break
-      default:
-        color = 'white'
+    return () => {
+      console.log('component will unmount situation.................');//print when component is going to unmount
     }
-    return (
-      <button style = {{background: color}}>{props.text}</button>
-     ) 
-   }
+  },[user.lastName,user.firstName]);
 
-   const SampleComp2 = () => {
-    return (<div>
-      <p>{element3}</p>
-      <p>{element4}</p>
-    </div>) 
-   }
+
+  const handleClick = () => {
+    setUser({
+      ...user,
+      lastName : Math.random()
+    })
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h1>Welcome to the Site</h1>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-
-          {/* elements */}
-          <p>{element1}</p>
-          <p>{element2}</p>
-
-        {/* components */}
-        <SampleComp type='SUBMIT' text='Submit'/>
-        <SampleComp type='CANCEL' text='Cancel'/>
-        <SampleComp type='CONFIRM' text='Confirm'/>
-
-        <SampleComp2/>   
-
-  
+        <p>{user.firstName}</p>
+        <p>{user.lastName}</p>
+        <button onClick={handleClick}>Submit</button>
       </header>
     </div>
   );
