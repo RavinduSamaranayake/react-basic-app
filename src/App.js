@@ -3,65 +3,52 @@ import './App.css';
 import React from 'react';
 
 function App() {
+  
+  const [data,setData] = React.useState();
 
-  const element1 = <h3>Hello Kushan</h3> //element create using JSX (JavaScript XML)-> EASSY WAY
-  const element2 = React.createElement('h3',null,'Hello Ravindu') // above JSX converts to this type
+  const handleSubmit = (event) => {
+    console.log(event,'submitted called.....');
+    event.preventDefault();//to prevent the deafult behaviors of html forms. one of is refresh page when it is submit. 
+  }
 
-  const element3 = <div>
-    <div>Are you sure want to do this ?</div>
-  </div>
+  const handleChange = (event) => {
+    console.log(event);
+    setData({
+      ...data,
+      [event.target.name] : getValueOnInputType(event.target.type,event)
+    });
+    console.log('to be submit data is ',data); //we use '...' with 'data' for storing previous data object. if not use like this then data gets only latest input value only 
+  }
 
-  const element4 = React.createElement('div',null,React
-  .createElement('div',null,'Are you sure want to do this2s ?'))
-
-  const SampleComp = (props) => {
-    let color = ''
-    switch(props.type){
-      case 'SUBMIT':
-        color = 'blue'
-        break
-      case 'CANCEL':
-        color = 'red'
-        break
-      case 'CONFIRM':
-        color = 'green'
-        break
+  const getValueOnInputType = (inputType,event) => {
+    console.log('input type is....',inputType);
+    switch (inputType) {
+      case 'checkbox':
+        return event.target.checked;
       default:
-        color = 'white'
+        return event.target.value;
     }
-    return (
-      <button style = {{background: color}}>{props.text}</button>
-     ) 
-   }
-
-   const SampleComp2 = () => {
-    return (<div>
-      <p>{element3}</p>
-      <p>{element4}</p>
-    </div>) 
-   }
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h1>Welcome to the Site</h1>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-
-          {/* elements */}
-          <p>{element1}</p>
-          <p>{element2}</p>
-
-        {/* components */}
-        <SampleComp type='SUBMIT' text='Submit'/>
-        <SampleComp type='CANCEL' text='Cancel'/>
-        <SampleComp type='CONFIRM' text='Confirm'/>
-
-        <SampleComp2/>   
-
-  
+        <form onSubmit={handleSubmit}>
+          <div>
+            <input type='text' name='firstName' onChange={handleChange}></input>
+          </div>
+          <div>
+            <input type='text' name= 'lastName' onChange={handleChange}></input>
+          </div>
+          <div>
+            <input type= 'checkbox' name='isOk' onChange={handleChange}></input>
+          </div>  
+          <div>  
+            <button type='submit'>Submit</button> 
+          </div>
+        </form>
       </header>
     </div>
   );
