@@ -1,67 +1,46 @@
-import logo from './logo.svg';
 import './App.css';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 function App() {
 
-  const element1 = <h3>Hello Kushan</h3> //element create using JSX (JavaScript XML)-> EASSY WAY
-  const element2 = React.createElement('h3',null,'Hello Ravindu') // above JSX converts to this type
+  const[number,setNumber] = useState(0)
+  const[randomNumber,setRandomNumber] = useState(Math.random(100))
 
-  const element3 = <div>
-    <div>Are you sure want to do this ?</div>
-  </div>
+  const updateRandomNumber = () => {
+    setRandomNumber(Math.random(100))
+  }
+  
+  const updateNumber = () => {
+    setNumber(number +1)
+  }
 
-  const element4 = React.createElement('div',null,React
-  .createElement('div',null,'Are you sure want to do this2s ?'))
+  // const getNumberText = (addValue) => {
+  //   return `last updated number is : ${number+addValue}`
+  // }
 
-  const SampleComp = (props) => {
-    let color = ''
-    switch(props.type){
-      case 'SUBMIT':
-        color = 'blue'
-        break
-      case 'CANCEL':
-        color = 'red'
-        break
-      case 'CONFIRM':
-        color = 'green'
-        break
-      default:
-        color = 'white'
-    }
-    return (
-      <button style = {{background: color}}>{props.text}</button>
-     ) 
-   }
+  const getNumberText = useCallback((addValue) => {
+    return `last updated number is : ${number+addValue}`
+  }, [number]); // Now useEffect called only number is changed
 
-   const SampleComp2 = () => {
-    return (<div>
-      <p>{element3}</p>
-      <p>{element4}</p>
-    </div>) 
-   }
+  useEffect(() => {
+    console.log('useEffect Calling.....');
+
+  }, [getNumberText]); //here this use effect calling even random number is changing. reason is whole componenet re rendering when change random number. after re rendering previous
+                       //getNumberText function not equals to latest function value (but body not changed. (reffer js obj==obj thing))  this will effect to the performance issue of react.
+                       //for avoiding this situation let's use  useCallback hook. useCallback hook keep the number state in memory and calling function when only number is changed
+                       //okay then let's modify our getNumber text function here.                   
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1>Welcome to the Site</h1>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-
-          {/* elements */}
-          <p>{element1}</p>
-          <p>{element2}</p>
-
-        {/* components */}
-        <SampleComp type='SUBMIT' text='Submit'/>
-        <SampleComp type='CANCEL' text='Cancel'/>
-        <SampleComp type='CONFIRM' text='Confirm'/>
-
-        <SampleComp2/>   
-
-  
+        {getNumberText(100)}
+        <br/>
+        number : {number}
+        <br/>
+        random number : {randomNumber}
+        <br/>
+        <button onClick={updateRandomNumber}>Update Random Number</button>
+        <button onClick={updateNumber}>Update Number</button>
       </header>
     </div>
   );
