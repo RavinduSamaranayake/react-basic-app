@@ -1,67 +1,58 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+const useApi = () => {
+  const [response,setResponse] = useState({
+    data : null,
+    isLoading : false
+  })
+
+  const api = {
+    post : (data) => {
+      setResponse({data : null, isLoading : true})
+      setTimeout(() => {
+        setResponse({data : {message : 'OK',code : 200}, isLoading : false });
+      },5000)
+    },
+    get : () => console.log('Get all data.................')
+  }
+  return [response,api];
+}
 
 function App() {
 
-  const element1 = <h3>Hello Kushan</h3> //element create using JSX (JavaScript XML)-> EASSY WAY
-  const element2 = React.createElement('h3',null,'Hello Ravindu') // above JSX converts to this type
+  const [response,api] = useApi();
+  useEffect(() => {
+    if(!response.isLoading && response.data != null)
+        console.log(response.data,'....');
+    else if(!response.isLoading && response.data == null)
+        console.log('..waiting for response data..');    
+    else
+        console.log('............still loading............');
+  },[response])      
+  
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    api.post({name : 'kushan'})
+  }
 
-  const element3 = <div>
-    <div>Are you sure want to do this ?</div>
-  </div>
-
-  const element4 = React.createElement('div',null,React
-  .createElement('div',null,'Are you sure want to do this2s ?'))
-
-  const SampleComp = (props) => {
-    let color = ''
-    switch(props.type){
-      case 'SUBMIT':
-        color = 'blue'
-        break
-      case 'CANCEL':
-        color = 'red'
-        break
-      case 'CONFIRM':
-        color = 'green'
-        break
-      default:
-        color = 'white'
-    }
-    return (
-      <button style = {{background: color}}>{props.text}</button>
-     ) 
-   }
-
-   const SampleComp2 = () => {
-    return (<div>
-      <p>{element3}</p>
-      <p>{element4}</p>
-    </div>) 
-   }
+  const handleGet = () => {
+    console.log('Get CALLED..',response);
+    api.get()
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h1>Welcome to the Site</h1>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-
-          {/* elements */}
-          <p>{element1}</p>
-          <p>{element2}</p>
-
-        {/* components */}
-        <SampleComp type='SUBMIT' text='Submit'/>
-        <SampleComp type='CANCEL' text='Cancel'/>
-        <SampleComp type='CONFIRM' text='Confirm'/>
-
-        <SampleComp2/>   
-
-  
+        <div>
+          <form onSubmit={handleSubmit}>
+            <input type="submit" value="Submit" /> 
+          </form>
+          <button onClick={handleGet}>Get Values</button>
+        </div>
       </header>
     </div>
   );
